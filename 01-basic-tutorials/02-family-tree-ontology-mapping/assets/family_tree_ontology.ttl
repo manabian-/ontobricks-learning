@@ -1,0 +1,35 @@
+@prefix familytree: <https://databricks-ontology.com/FamilyTree/> .
+@prefix ontobricks: <http://ontobricks.com/schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://databricks-ontology.com/FamilyTree> a owl:Ontology ;
+    rdfs:label "familytree" .
+
+familytree:Person a owl:Class ;
+    rdfs:label "Person" .
+
+familytree:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    ontobricks:direction "forward" ;
+    rdfs:domain familytree:Person ;
+    rdfs:range xsd:string .
+
+familytree:gender a owl:DatatypeProperty ;
+    rdfs:label "gender" ;
+    ontobricks:direction "forward" ;
+    rdfs:domain familytree:Person ;
+    rdfs:range xsd:string .
+
+familytree:hasFather a owl:ObjectProperty ;
+    rdfs:label "hasFather" ;
+    ontobricks:direction "forward" ;
+    rdfs:domain familytree:Person ;
+    rdfs:range familytree:Person .
+
+familytree:hasMother a owl:ObjectProperty ;
+    rdfs:label "hasMother" ;
+    ontobricks:direction "forward" ;
+    rdfs:domain familytree:Person ;
+    rdfs:range familytree:Person .

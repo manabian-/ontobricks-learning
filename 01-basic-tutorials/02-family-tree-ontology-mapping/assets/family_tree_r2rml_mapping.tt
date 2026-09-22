@@ -1,0 +1,46 @@
+@prefix ont: <https://databricks-ontology.com/FamilyTree/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ont:TriplesMap_Person a rr:TriplesMap ;
+    rdfs:comment "Mapping for Person to https://databricks-ontology.com/FamilyTree/Person" ;
+    rr:logicalTable [ rr:sqlQuery """SELECT
+  person_id,
+  name AS person_label,
+  name,
+  gender
+FROM
+  ontobricks.family_tree_01.person""" ] ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:column "gender" ;
+                    rr:datatype xsd:string ] ;
+            rr:predicate ont:gender ],
+        [ rr:objectMap [ rr:column "person_label" ] ;
+            rr:predicate rdfs:label ],
+        [ rr:objectMap [ rr:column "name" ;
+                    rr:datatype xsd:string ] ;
+            rr:predicate ont:name ] ;
+    rr:subjectMap [ rr:class ont:Person ;
+            rr:template "https://databricks-ontology.com/FamilyTree/Person/{person_id}" ] .
+
+ont:TriplesMap_Rel_hasFather_0 a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Person --hasFather--> Person" ;
+    rr:logicalTable [ rr:sqlQuery """SELECT
+  person_id, -- source_id
+  father_id  -- target_id
+FROM ontobricks.family_tree_01.person
+WHERE father_id IS NOT NULL""" ] ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:template "https://databricks-ontology.com/FamilyTree/Person/{father_id}" ] ;
+            rr:predicate ont:hasFather ] ;
+    rr:subjectMap [ rr:template "https://databricks-ontology.com/FamilyTree/Person/{person_id}" ] .
+
+ont:TriplesMap_Rel_hasMother_1 a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Person --hasMother--> Person" ;
+    rr:logicalTable [ rr:sqlQuery """SELECT
+  person_id, -- source_id
+  mother_id  -- target_id
+FROM ontobricks.family_tree_01.person
+WHERE mother_id IS NOT NULL""" ] ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:template "https://databricks-ontology.com/FamilyTree/Person/{mother_id}" ] ;
+            rr:predicate ont:hasMother ] ;
+    rr:subjectMap [ rr:template "https://databricks-ontology.com/FamilyTree/Person/{person_id}" ] .

@@ -1,0 +1,966 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ont: <https://databricks-ontology.com/CustomerJourney#> .
+@prefix map: <https://databricks-ontology.com/CustomerJourney/mapping/> .
+@prefix customer: <https://databricks-ontology.com/CustomerJourney/property/Customer/> .
+@prefix contract: <https://databricks-ontology.com/CustomerJourney/property/Contract/> .
+@prefix subscription: <https://databricks-ontology.com/CustomerJourney/property/Subscription/> .
+@prefix meter: <https://databricks-ontology.com/CustomerJourney/property/Meter/> .
+@prefix meterreading: <https://databricks-ontology.com/CustomerJourney/property/MeterReading/> .
+@prefix invoice: <https://databricks-ontology.com/CustomerJourney/property/Invoice/> .
+@prefix payment: <https://databricks-ontology.com/CustomerJourney/property/Payment/> .
+@prefix call: <https://databricks-ontology.com/CustomerJourney/property/Call/> .
+@prefix claim: <https://databricks-ontology.com/CustomerJourney/property/Claim/> .
+@prefix interaction: <https://databricks-ontology.com/CustomerJourney/property/Interaction/> .
+
+# R2RML mapping for ontobricks.customer_journey
+# Target ontology: Customer Journey Ontology (Energy Provider)
+# Physical source columns use snake_case; SQL output aliases and OWL attribute
+# local names use lowerCamelCase.
+# Coverage: 10 entity maps, 100 datatype-property maps, 10 label maps,
+#           and 10 relationship maps.
+
+# -----------------------------------------------------------------------------
+# Entity: Customer
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Customer a rr:TriplesMap ;
+    rdfs:comment "Mapping for Customer to https://databricks-ontology.com/CustomerJourney#Customer" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    customer_id AS customerId,
+    CONCAT(first_name, ' ', last_name) AS label,
+    customer_id AS customerIdAttr,
+    first_name AS firstName,
+    last_name AS lastName,
+    email,
+    phone,
+    street_address AS streetAddress,
+    city,
+    postal_code AS postalCode,
+    country,
+    TRY_CAST(date_of_birth AS DATE) AS dateOfBirth,
+    TRY_CAST(registration_date AS DATE) AS registrationDate,
+    segment,
+    loyalty_points AS loyaltyPoints,
+    TRY_CAST(is_active AS BOOLEAN) AS isActive
+FROM ontobricks.customer_journey.customer"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Customer/{customerId}" ;
+        rr:class ont:Customer ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate customer:customerId ;
+        rr:objectMap [ rr:column "customerIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:firstName ;
+        rr:objectMap [ rr:column "firstName" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:lastName ;
+        rr:objectMap [ rr:column "lastName" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:email ;
+        rr:objectMap [ rr:column "email" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:phone ;
+        rr:objectMap [ rr:column "phone" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:streetAddress ;
+        rr:objectMap [ rr:column "streetAddress" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:city ;
+        rr:objectMap [ rr:column "city" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:postalCode ;
+        rr:objectMap [ rr:column "postalCode" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:country ;
+        rr:objectMap [ rr:column "country" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:dateOfBirth ;
+        rr:objectMap [ rr:column "dateOfBirth" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate customer:registrationDate ;
+        rr:objectMap [ rr:column "registrationDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate customer:segment ;
+        rr:objectMap [ rr:column "segment" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate customer:loyaltyPoints ;
+        rr:objectMap [ rr:column "loyaltyPoints" ; rr:datatype xsd:integer ]
+    ],
+    [
+        rr:predicate customer:isActive ;
+        rr:objectMap [ rr:column "isActive" ; rr:datatype xsd:boolean ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Contract
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Contract a rr:TriplesMap ;
+    rdfs:comment "Mapping for Contract to https://databricks-ontology.com/CustomerJourney#Contract" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    contract_id AS contractId,
+    CONCAT(contract_id, ' - ', energy_type) AS label,
+    contract_id AS contractIdAttr,
+    customer_id AS customerId,
+    energy_type AS energyType,
+    TRY_CAST(start_date AS DATE) AS startDate,
+    TRY_CAST(end_date AS DATE) AS endDate,
+    status,
+    monthly_fee AS monthlyFee,
+    payment_method AS paymentMethod,
+    TRY_CAST(auto_renewal AS BOOLEAN) AS autoRenewal,
+    TRY_CAST(created_at AS DATE) AS createdAt
+FROM ontobricks.customer_journey.contract"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+        rr:class ont:Contract ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate contract:contractId ;
+        rr:objectMap [ rr:column "contractIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate contract:customerId ;
+        rr:objectMap [ rr:column "customerId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate contract:energyType ;
+        rr:objectMap [ rr:column "energyType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate contract:startDate ;
+        rr:objectMap [ rr:column "startDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate contract:endDate ;
+        rr:objectMap [ rr:column "endDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate contract:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate contract:monthlyFee ;
+        rr:objectMap [ rr:column "monthlyFee" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate contract:paymentMethod ;
+        rr:objectMap [ rr:column "paymentMethod" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate contract:autoRenewal ;
+        rr:objectMap [ rr:column "autoRenewal" ; rr:datatype xsd:boolean ]
+    ],
+    [
+        rr:predicate contract:createdAt ;
+        rr:objectMap [ rr:column "createdAt" ; rr:datatype xsd:date ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Subscription
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Subscription a rr:TriplesMap ;
+    rdfs:comment "Mapping for Subscription to https://databricks-ontology.com/CustomerJourney#Subscription" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    subscription_id AS subscriptionId,
+    CONCAT(subscription_id, ' - ', plan_type) AS label,
+    subscription_id AS subscriptionIdAttr,
+    contract_id AS contractId,
+    plan_type AS planType,
+    price_per_kwh AS pricePerKwh,
+    price_per_m3 AS pricePerM3,
+    standing_charge AS standingCharge,
+    discount_percentage AS discountPercentage,
+    TRY_CAST(green_energy AS BOOLEAN) AS greenEnergy,
+    TRY_CAST(start_date AS DATE) AS startDate,
+    status
+FROM ontobricks.customer_journey.subscription"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Subscription/{subscriptionId}" ;
+        rr:class ont:Subscription ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate subscription:subscriptionId ;
+        rr:objectMap [ rr:column "subscriptionIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate subscription:contractId ;
+        rr:objectMap [ rr:column "contractId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate subscription:planType ;
+        rr:objectMap [ rr:column "planType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate subscription:pricePerKwh ;
+        rr:objectMap [ rr:column "pricePerKwh" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate subscription:pricePerM3 ;
+        rr:objectMap [ rr:column "pricePerM3" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate subscription:standingCharge ;
+        rr:objectMap [ rr:column "standingCharge" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate subscription:discountPercentage ;
+        rr:objectMap [ rr:column "discountPercentage" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate subscription:greenEnergy ;
+        rr:objectMap [ rr:column "greenEnergy" ; rr:datatype xsd:boolean ]
+    ],
+    [
+        rr:predicate subscription:startDate ;
+        rr:objectMap [ rr:column "startDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate subscription:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Meter
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Meter a rr:TriplesMap ;
+    rdfs:comment "Mapping for Meter to https://databricks-ontology.com/CustomerJourney#Meter" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    meter_id AS meterId,
+    CONCAT(meter_serial, ' - ', energy_type) AS label,
+    meter_id AS meterIdAttr,
+    contract_id AS contractId,
+    meter_serial AS meterSerial,
+    meter_type AS meterType,
+    energy_type AS energyType,
+    TRY_CAST(installation_date AS DATE) AS installationDate,
+    TRY_CAST(last_inspection_date AS DATE) AS lastInspectionDate,
+    location,
+    status
+FROM ontobricks.customer_journey.meter"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Meter/{meterId}" ;
+        rr:class ont:Meter ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate meter:meterId ;
+        rr:objectMap [ rr:column "meterIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:contractId ;
+        rr:objectMap [ rr:column "contractId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:meterSerial ;
+        rr:objectMap [ rr:column "meterSerial" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:meterType ;
+        rr:objectMap [ rr:column "meterType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:energyType ;
+        rr:objectMap [ rr:column "energyType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:installationDate ;
+        rr:objectMap [ rr:column "installationDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate meter:lastInspectionDate ;
+        rr:objectMap [ rr:column "lastInspectionDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate meter:location ;
+        rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meter:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: MeterReading
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_MeterReading a rr:TriplesMap ;
+    rdfs:comment "Mapping for MeterReading to https://databricks-ontology.com/CustomerJourney#MeterReading" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    reading_id AS readingId,
+    CONCAT(reading_id, ' - ', CAST(reading_value AS STRING), ' ', unit) AS label,
+    reading_id AS readingIdAttr,
+    meter_id AS meterId,
+    TRY_CAST(reading_date AS DATE) AS readingDate,
+    reading_value AS readingValue,
+    unit,
+    reading_type AS readingType,
+    reported_by AS reportedBy,
+    TRY_CAST(validated AS BOOLEAN) AS validated
+FROM ontobricks.customer_journey.meter_reading"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/MeterReading/{readingId}" ;
+        rr:class ont:MeterReading ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate meterreading:readingId ;
+        rr:objectMap [ rr:column "readingIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meterreading:meterId ;
+        rr:objectMap [ rr:column "meterId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meterreading:readingDate ;
+        rr:objectMap [ rr:column "readingDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate meterreading:readingValue ;
+        rr:objectMap [ rr:column "readingValue" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate meterreading:unit ;
+        rr:objectMap [ rr:column "unit" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meterreading:readingType ;
+        rr:objectMap [ rr:column "readingType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meterreading:reportedBy ;
+        rr:objectMap [ rr:column "reportedBy" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate meterreading:validated ;
+        rr:objectMap [ rr:column "validated" ; rr:datatype xsd:boolean ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Invoice
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Invoice a rr:TriplesMap ;
+    rdfs:comment "Mapping for Invoice to https://databricks-ontology.com/CustomerJourney#Invoice" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    invoice_id AS invoiceId,
+    CONCAT(invoice_id, ' - ', CAST(amount_ttc AS STRING)) AS label,
+    invoice_id AS invoiceIdAttr,
+    contract_id AS contractId,
+    TRY_CAST(issue_date AS DATE) AS issueDate,
+    TRY_CAST(due_date AS DATE) AS dueDate,
+    TRY_CAST(period_start AS DATE) AS periodStart,
+    TRY_CAST(period_end AS DATE) AS periodEnd,
+    amount_ht AS amountHt,
+    vat_amount AS vatAmount,
+    amount_ttc AS amountTtc,
+    status,
+    TRY_CAST(payment_date AS DATE) AS paymentDate
+FROM ontobricks.customer_journey.invoice"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Invoice/{invoiceId}" ;
+        rr:class ont:Invoice ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate invoice:invoiceId ;
+        rr:objectMap [ rr:column "invoiceIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate invoice:contractId ;
+        rr:objectMap [ rr:column "contractId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate invoice:issueDate ;
+        rr:objectMap [ rr:column "issueDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate invoice:dueDate ;
+        rr:objectMap [ rr:column "dueDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate invoice:periodStart ;
+        rr:objectMap [ rr:column "periodStart" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate invoice:periodEnd ;
+        rr:objectMap [ rr:column "periodEnd" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate invoice:amountHt ;
+        rr:objectMap [ rr:column "amountHt" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate invoice:vatAmount ;
+        rr:objectMap [ rr:column "vatAmount" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate invoice:amountTtc ;
+        rr:objectMap [ rr:column "amountTtc" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate invoice:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate invoice:paymentDate ;
+        rr:objectMap [ rr:column "paymentDate" ; rr:datatype xsd:date ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Payment
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Payment a rr:TriplesMap ;
+    rdfs:comment "Mapping for Payment to https://databricks-ontology.com/CustomerJourney#Payment" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    payment_id AS paymentId,
+    CONCAT(payment_id, ' - ', CAST(amount AS STRING)) AS label,
+    payment_id AS paymentIdAttr,
+    invoice_id AS invoiceId,
+    TRY_CAST(payment_date AS DATE) AS paymentDate,
+    amount,
+    payment_method AS paymentMethod,
+    transaction_ref AS transactionRef,
+    status,
+    TRY_CAST(processed_at AS TIMESTAMP) AS processedAt
+FROM ontobricks.customer_journey.payment"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Payment/{paymentId}" ;
+        rr:class ont:Payment ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate payment:paymentId ;
+        rr:objectMap [ rr:column "paymentIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate payment:invoiceId ;
+        rr:objectMap [ rr:column "invoiceId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate payment:paymentDate ;
+        rr:objectMap [ rr:column "paymentDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate payment:amount ;
+        rr:objectMap [ rr:column "amount" ; rr:datatype xsd:decimal ]
+    ],
+    [
+        rr:predicate payment:paymentMethod ;
+        rr:objectMap [ rr:column "paymentMethod" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate payment:transactionRef ;
+        rr:objectMap [ rr:column "transactionRef" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate payment:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate payment:processedAt ;
+        rr:objectMap [ rr:column "processedAt" ; rr:datatype xsd:dateTime ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Call
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Call a rr:TriplesMap ;
+    rdfs:comment "Mapping for Call to https://databricks-ontology.com/CustomerJourney#Call" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    call_id AS callId,
+    CONCAT(call_id, ' - ', reason) AS label,
+    call_id AS callIdAttr,
+    customer_id AS customerId,
+    TRY_CAST(call_datetime AS TIMESTAMP) AS callDatetime,
+    duration_seconds AS durationSeconds,
+    reason,
+    agent_id AS agentId,
+    status,
+    satisfaction_score AS satisfactionScore,
+    notes
+FROM ontobricks.customer_journey.`call`"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Call/{callId}" ;
+        rr:class ont:Call ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate call:callId ;
+        rr:objectMap [ rr:column "callIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate call:customerId ;
+        rr:objectMap [ rr:column "customerId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate call:callDatetime ;
+        rr:objectMap [ rr:column "callDatetime" ; rr:datatype xsd:dateTime ]
+    ],
+    [
+        rr:predicate call:durationSeconds ;
+        rr:objectMap [ rr:column "durationSeconds" ; rr:datatype xsd:integer ]
+    ],
+    [
+        rr:predicate call:reason ;
+        rr:objectMap [ rr:column "reason" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate call:agentId ;
+        rr:objectMap [ rr:column "agentId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate call:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate call:satisfactionScore ;
+        rr:objectMap [ rr:column "satisfactionScore" ; rr:datatype xsd:integer ]
+    ],
+    [
+        rr:predicate call:notes ;
+        rr:objectMap [ rr:column "notes" ; rr:datatype xsd:string ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Claim
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Claim a rr:TriplesMap ;
+    rdfs:comment "Mapping for Claim to https://databricks-ontology.com/CustomerJourney#Claim" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    claim_id AS claimId,
+    CONCAT(claim_id, ' - ', claim_type) AS label,
+    claim_id AS claimIdAttr,
+    customer_id AS customerId,
+    contract_id AS contractId,
+    claim_type AS claimType,
+    description,
+    TRY_CAST(open_date AS DATE) AS openDate,
+    TRY_CAST(resolution_date AS DATE) AS resolutionDate,
+    status,
+    priority,
+    assigned_to AS assignedTo,
+    compensation_amount AS compensationAmount
+FROM ontobricks.customer_journey.claim"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Claim/{claimId}" ;
+        rr:class ont:Claim ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate claim:claimId ;
+        rr:objectMap [ rr:column "claimIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:customerId ;
+        rr:objectMap [ rr:column "customerId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:contractId ;
+        rr:objectMap [ rr:column "contractId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:claimType ;
+        rr:objectMap [ rr:column "claimType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:description ;
+        rr:objectMap [ rr:column "description" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:openDate ;
+        rr:objectMap [ rr:column "openDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate claim:resolutionDate ;
+        rr:objectMap [ rr:column "resolutionDate" ; rr:datatype xsd:date ]
+    ],
+    [
+        rr:predicate claim:status ;
+        rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:priority ;
+        rr:objectMap [ rr:column "priority" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:assignedTo ;
+        rr:objectMap [ rr:column "assignedTo" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate claim:compensationAmount ;
+        rr:objectMap [ rr:column "compensationAmount" ; rr:datatype xsd:decimal ]
+    ] .
+
+# -----------------------------------------------------------------------------
+# Entity: Interaction
+# -----------------------------------------------------------------------------
+
+map:TriplesMap_Interaction a rr:TriplesMap ;
+    rdfs:comment "Mapping for Interaction to https://databricks-ontology.com/CustomerJourney#Interaction" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    interaction_id AS interactionId,
+    CONCAT(interaction_id, ' - ', interaction_type) AS label,
+    interaction_id AS interactionIdAttr,
+    customer_id AS customerId,
+    channel,
+    interaction_type AS interactionType,
+    TRY_CAST(interaction_datetime AS TIMESTAMP) AS interactionDatetime,
+    subject,
+    outcome,
+    agent_id AS agentId,
+    duration_minutes AS durationMinutes,
+    sentiment
+FROM ontobricks.customer_journey.interaction"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Interaction/{interactionId}" ;
+        rr:class ont:Interaction ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap
+    [
+        rr:predicate rdfs:label ;
+        rr:objectMap [ rr:column "label" ]
+    ],
+    [
+        rr:predicate interaction:interactionId ;
+        rr:objectMap [ rr:column "interactionIdAttr" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:customerId ;
+        rr:objectMap [ rr:column "customerId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:channel ;
+        rr:objectMap [ rr:column "channel" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:interactionType ;
+        rr:objectMap [ rr:column "interactionType" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:interactionDatetime ;
+        rr:objectMap [ rr:column "interactionDatetime" ; rr:datatype xsd:dateTime ]
+    ],
+    [
+        rr:predicate interaction:subject ;
+        rr:objectMap [ rr:column "subject" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:outcome ;
+        rr:objectMap [ rr:column "outcome" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:agentId ;
+        rr:objectMap [ rr:column "agentId" ; rr:datatype xsd:string ]
+    ],
+    [
+        rr:predicate interaction:durationMinutes ;
+        rr:objectMap [ rr:column "durationMinutes" ; rr:datatype xsd:integer ]
+    ],
+    [
+        rr:predicate interaction:sentiment ;
+        rr:objectMap [ rr:column "sentiment" ; rr:datatype xsd:string ]
+    ] .
+
+# =============================================================================
+# Relationships
+# =============================================================================
+
+map:TriplesMap_Rel_hasContract a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Customer --hasContract--> Contract" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    customer_id AS customerId,
+    contract_id AS contractId
+FROM ontobricks.customer_journey.contract
+WHERE customer_id IS NOT NULL AND contract_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Customer/{customerId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasContract ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_hasSubscription a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Contract --hasSubscription--> Subscription" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    contract_id AS contractId,
+    subscription_id AS subscriptionId
+FROM ontobricks.customer_journey.subscription
+WHERE contract_id IS NOT NULL AND subscription_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasSubscription ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Subscription/{subscriptionId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_hasMeter a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Contract --hasMeter--> Meter" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    contract_id AS contractId,
+    meter_id AS meterId
+FROM ontobricks.customer_journey.meter
+WHERE contract_id IS NOT NULL AND meter_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasMeter ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Meter/{meterId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_hasReading a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Meter --hasReading--> MeterReading" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    meter_id AS meterId,
+    reading_id AS readingId
+FROM ontobricks.customer_journey.meter_reading
+WHERE meter_id IS NOT NULL AND reading_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Meter/{meterId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasReading ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/MeterReading/{readingId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_generatesInvoice a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Contract --generatesInvoice--> Invoice" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    contract_id AS contractId,
+    invoice_id AS invoiceId
+FROM ontobricks.customer_journey.invoice
+WHERE contract_id IS NOT NULL AND invoice_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:generatesInvoice ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Invoice/{invoiceId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_receivesPayment a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Invoice --receivesPayment--> Payment" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    invoice_id AS invoiceId,
+    payment_id AS paymentId
+FROM ontobricks.customer_journey.payment
+WHERE invoice_id IS NOT NULL AND payment_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Invoice/{invoiceId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:receivesPayment ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Payment/{paymentId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_makesCall a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Customer --makesCall--> Call" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    customer_id AS customerId,
+    call_id AS callId
+FROM ontobricks.customer_journey.`call`
+WHERE customer_id IS NOT NULL AND call_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Customer/{customerId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:makesCall ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Call/{callId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_filesClaim a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Customer --filesClaim--> Claim" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    customer_id AS customerId,
+    claim_id AS claimId
+FROM ontobricks.customer_journey.claim
+WHERE customer_id IS NOT NULL AND claim_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Customer/{customerId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:filesClaim ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Claim/{claimId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_hasClaim a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Contract --hasClaim--> Claim" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    contract_id AS contractId,
+    claim_id AS claimId
+FROM ontobricks.customer_journey.claim
+WHERE contract_id IS NOT NULL AND claim_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Contract/{contractId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasClaim ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Claim/{claimId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .
+
+map:TriplesMap_Rel_hasInteraction a rr:TriplesMap ;
+    rdfs:comment "Relationship mapping: Customer --hasInteraction--> Interaction" ;
+    rr:logicalTable [
+        rr:sqlQuery """SELECT
+    customer_id AS customerId,
+    interaction_id AS interactionId
+FROM ontobricks.customer_journey.interaction
+WHERE customer_id IS NOT NULL AND interaction_id IS NOT NULL"""
+    ] ;
+    rr:subjectMap [
+        rr:template "https://databricks-ontology.com/CustomerJourney/Customer/{customerId}" ;
+        rr:termType rr:IRI
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate ont:hasInteraction ;
+        rr:objectMap [
+            rr:template "https://databricks-ontology.com/CustomerJourney/Interaction/{interactionId}" ;
+            rr:termType rr:IRI
+        ]
+    ] .

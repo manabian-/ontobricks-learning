@@ -1,0 +1,758 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ont: <https://databricks-ontology.com/CustomerJourney#> .
+@prefix ontobricks: <http://ontobricks.com/schema#> .
+@prefix customer: <https://databricks-ontology.com/CustomerJourney/property/Customer/> .
+@prefix contract: <https://databricks-ontology.com/CustomerJourney/property/Contract/> .
+@prefix subscription: <https://databricks-ontology.com/CustomerJourney/property/Subscription/> .
+@prefix meter: <https://databricks-ontology.com/CustomerJourney/property/Meter/> .
+@prefix meterreading: <https://databricks-ontology.com/CustomerJourney/property/MeterReading/> .
+@prefix invoice: <https://databricks-ontology.com/CustomerJourney/property/Invoice/> .
+@prefix payment: <https://databricks-ontology.com/CustomerJourney/property/Payment/> .
+@prefix call: <https://databricks-ontology.com/CustomerJourney/property/Call/> .
+@prefix claim: <https://databricks-ontology.com/CustomerJourney/property/Claim/> .
+@prefix interaction: <https://databricks-ontology.com/CustomerJourney/property/Interaction/> .
+
+<https://databricks-ontology.com/CustomerJourney> a owl:Ontology ;
+    rdfs:label "Customer Journey Ontology (Energy Provider)" ;
+    rdfs:comment "OWL ontology aligned to data/customer at commit 9f46b93772d7a9dc315158ad5b2357feaa8e6b8c. It covers all 10 source tables, all 100 documented columns, and all 10 foreign-key relationships." ;
+    owl:versionInfo "data/customer@9f46b93772d7a9dc315158ad5b2357feaa8e6b8c" ;
+    rdfs:seeAlso <https://github.com/databrickslabs/ontobricks/tree/9f46b93772d7a9dc315158ad5b2357feaa8e6b8c/data/customer> .
+
+# -----------------------------------------------------------------------------
+# Classes: one class per data/customer table
+# -----------------------------------------------------------------------------
+
+ont:Customer a owl:Class ;
+    rdfs:label "Customer" ;
+    rdfs:comment "Core customer information including personal details and segmentation." ;
+    ontobricks:icon "👤" .
+
+ont:Contract a owl:Class ;
+    rdfs:label "Contract" ;
+    rdfs:comment "Energy supply contract linking a customer to energy services." ;
+    ontobricks:icon "📄" .
+
+ont:Subscription a owl:Class ;
+    rdfs:label "Subscription" ;
+    rdfs:comment "Pricing plan and tariff details associated with a contract." ;
+    ontobricks:icon "📋" .
+
+ont:Meter a owl:Class ;
+    rdfs:label "Meter" ;
+    rdfs:comment "Physical energy meter installed at a customer premise." ;
+    ontobricks:icon "🔌" .
+
+ont:MeterReading a owl:Class ;
+    rdfs:label "Meter Reading" ;
+    rdfs:comment "Energy consumption reading produced by a meter." ;
+    ontobricks:icon "📊" .
+
+ont:Invoice a owl:Class ;
+    rdfs:label "Invoice" ;
+    rdfs:comment "Billing record for energy consumption." ;
+    ontobricks:icon "💰" .
+
+ont:Payment a owl:Class ;
+    rdfs:label "Payment" ;
+    rdfs:comment "Payment transaction linked to an invoice." ;
+    ontobricks:icon "💳" .
+
+ont:Call a owl:Class ;
+    rdfs:label "Call" ;
+    rdfs:comment "Customer service call record." ;
+    ontobricks:icon "📞" .
+
+ont:Claim a owl:Class ;
+    rdfs:label "Claim" ;
+    rdfs:comment "Customer complaint or dispute record." ;
+    ontobricks:icon "⚠️" .
+
+ont:Interaction a owl:Class ;
+    rdfs:label "Interaction" ;
+    rdfs:comment "General customer interaction across service channels." ;
+    ontobricks:icon "💬" .
+
+# -----------------------------------------------------------------------------
+# Object properties: one relationship for every foreign key
+# -----------------------------------------------------------------------------
+
+ont:hasContract a owl:ObjectProperty ;
+    rdfs:label "hasContract" ;
+    rdfs:comment "Customer owns contracts. Source FK: contract.customer_id -> customer.customer_id." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range ont:Contract .
+
+ont:hasSubscription a owl:ObjectProperty ;
+    rdfs:label "hasSubscription" ;
+    rdfs:comment "Contract has pricing-plan subscriptions. Source FK: subscription.contract_id -> contract.contract_id." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range ont:Subscription .
+
+ont:hasMeter a owl:ObjectProperty ;
+    rdfs:label "hasMeter" ;
+    rdfs:comment "Contract is linked to meters. Source FK: meter.contract_id -> contract.contract_id." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range ont:Meter .
+
+ont:hasReading a owl:ObjectProperty ;
+    rdfs:label "hasReading" ;
+    rdfs:comment "Meter generates readings. Source FK: meter_reading.meter_id -> meter.meter_id." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range ont:MeterReading .
+
+ont:generatesInvoice a owl:ObjectProperty ;
+    rdfs:label "generatesInvoice" ;
+    rdfs:comment "Contract generates invoices. Source FK: invoice.contract_id -> contract.contract_id." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range ont:Invoice .
+
+ont:receivesPayment a owl:ObjectProperty ;
+    rdfs:label "receivesPayment" ;
+    rdfs:comment "Invoice receives payments. Source FK: payment.invoice_id -> invoice.invoice_id." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range ont:Payment .
+
+ont:makesCall a owl:ObjectProperty ;
+    rdfs:label "makesCall" ;
+    rdfs:comment "Customer makes service calls. Source FK: call.customer_id -> customer.customer_id." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range ont:Call .
+
+ont:filesClaim a owl:ObjectProperty ;
+    rdfs:label "filesClaim" ;
+    rdfs:comment "Customer files claims. Source FK: claim.customer_id -> customer.customer_id." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range ont:Claim .
+
+ont:hasClaim a owl:ObjectProperty ;
+    rdfs:label "hasClaim" ;
+    rdfs:comment "Contract is associated with claims. Source FK: claim.contract_id -> contract.contract_id." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range ont:Claim .
+
+ont:hasInteraction a owl:ObjectProperty ;
+    rdfs:label "hasInteraction" ;
+    rdfs:comment "Customer has interactions. Source FK: interaction.customer_id -> customer.customer_id." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range ont:Interaction .
+
+# -----------------------------------------------------------------------------
+# Datatype properties: all 100 documented source columns
+#
+# Property IRIs are class-scoped to avoid OWL domain collisions for repeated
+# column names such as status, customer_id, contract_id, and payment_date.
+# The local name and rdfs:label remain the exact source column name.
+# -----------------------------------------------------------------------------
+
+# Customer
+customer:customer_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "customer_id" ;
+    rdfs:comment "Primary key, e.g. CUST00001." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:first_name a owl:DatatypeProperty ;
+    rdfs:label "first_name" ;
+    rdfs:comment "Customer first name." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:last_name a owl:DatatypeProperty ;
+    rdfs:label "last_name" ;
+    rdfs:comment "Customer last name." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:email a owl:DatatypeProperty ;
+    rdfs:label "email" ;
+    rdfs:comment "Email address." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:phone a owl:DatatypeProperty ;
+    rdfs:label "phone" ;
+    rdfs:comment "Phone number." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:street_address a owl:DatatypeProperty ;
+    rdfs:label "street_address" ;
+    rdfs:comment "Street address." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:city a owl:DatatypeProperty ;
+    rdfs:label "city" ;
+    rdfs:comment "City name." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:postal_code a owl:DatatypeProperty ;
+    rdfs:label "postal_code" ;
+    rdfs:comment "Postal or ZIP code." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:country a owl:DatatypeProperty ;
+    rdfs:label "country" ;
+    rdfs:comment "Country." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:date_of_birth a owl:DatatypeProperty ;
+    rdfs:label "date_of_birth" ;
+    rdfs:comment "Date of birth." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:date .
+
+customer:registration_date a owl:DatatypeProperty ;
+    rdfs:label "registration_date" ;
+    rdfs:comment "Customer registration date." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:date .
+
+customer:segment a owl:DatatypeProperty ;
+    rdfs:label "segment" ;
+    rdfs:comment "Customer segment: residential, small_business, or professional." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:string .
+
+customer:loyalty_points a owl:DatatypeProperty ;
+    rdfs:label "loyalty_points" ;
+    rdfs:comment "Accumulated loyalty points." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:integer .
+
+customer:is_active a owl:DatatypeProperty ;
+    rdfs:label "is_active" ;
+    rdfs:comment "Whether the customer is active." ;
+    rdfs:domain ont:Customer ;
+    rdfs:range xsd:boolean .
+
+# Contract
+contract:contract_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "contract_id" ;
+    rdfs:comment "Primary key, e.g. CON00001." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:string .
+
+contract:customer_id a owl:DatatypeProperty ;
+    rdfs:label "customer_id" ;
+    rdfs:comment "Foreign key to Customer.customer_id." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:string .
+
+contract:energy_type a owl:DatatypeProperty ;
+    rdfs:label "energy_type" ;
+    rdfs:comment "Energy type: electricity, gas, or dual_fuel." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:string .
+
+contract:start_date a owl:DatatypeProperty ;
+    rdfs:label "start_date" ;
+    rdfs:comment "Contract start date." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:date .
+
+contract:end_date a owl:DatatypeProperty ;
+    rdfs:label "end_date" ;
+    rdfs:comment "Contract end date." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:date .
+
+contract:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Contract status: active, terminated, suspended, or pending." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:string .
+
+contract:monthly_fee a owl:DatatypeProperty ;
+    rdfs:label "monthly_fee" ;
+    rdfs:comment "Monthly service fee." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:decimal .
+
+contract:payment_method a owl:DatatypeProperty ;
+    rdfs:label "payment_method" ;
+    rdfs:comment "Payment method." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:string .
+
+contract:auto_renewal a owl:DatatypeProperty ;
+    rdfs:label "auto_renewal" ;
+    rdfs:comment "Whether automatic renewal is enabled." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:boolean .
+
+contract:created_at a owl:DatatypeProperty ;
+    rdfs:label "created_at" ;
+    rdfs:comment "Contract creation date." ;
+    rdfs:domain ont:Contract ;
+    rdfs:range xsd:date .
+
+# Subscription
+subscription:subscription_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "subscription_id" ;
+    rdfs:comment "Primary key, e.g. SUB00001." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:string .
+
+subscription:contract_id a owl:DatatypeProperty ;
+    rdfs:label "contract_id" ;
+    rdfs:comment "Foreign key to Contract.contract_id." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:string .
+
+subscription:plan_type a owl:DatatypeProperty ;
+    rdfs:label "plan_type" ;
+    rdfs:comment "Plan type: basic, standard, premium, eco, or flex." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:string .
+
+subscription:price_per_kwh a owl:DatatypeProperty ;
+    rdfs:label "price_per_kwh" ;
+    rdfs:comment "Electricity price per kWh." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:decimal .
+
+subscription:price_per_m3 a owl:DatatypeProperty ;
+    rdfs:label "price_per_m3" ;
+    rdfs:comment "Gas price per cubic metre; may be null for electricity." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:decimal .
+
+subscription:standing_charge a owl:DatatypeProperty ;
+    rdfs:label "standing_charge" ;
+    rdfs:comment "Monthly standing charge." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:decimal .
+
+subscription:discount_percentage a owl:DatatypeProperty ;
+    rdfs:label "discount_percentage" ;
+    rdfs:comment "Applied discount percentage." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:decimal .
+
+subscription:green_energy a owl:DatatypeProperty ;
+    rdfs:label "green_energy" ;
+    rdfs:comment "Whether the subscription uses the green/renewable energy option." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:boolean .
+
+subscription:start_date a owl:DatatypeProperty ;
+    rdfs:label "start_date" ;
+    rdfs:comment "Subscription start date." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:date .
+
+subscription:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Subscription status: active, expired, or pending." ;
+    rdfs:domain ont:Subscription ;
+    rdfs:range xsd:string .
+
+# Meter
+meter:meter_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "meter_id" ;
+    rdfs:comment "Primary key, e.g. MTR000001." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:contract_id a owl:DatatypeProperty ;
+    rdfs:label "contract_id" ;
+    rdfs:comment "Foreign key to Contract.contract_id." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:meter_serial a owl:DatatypeProperty ;
+    rdfs:label "meter_serial" ;
+    rdfs:comment "Physical meter serial number." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:meter_type a owl:DatatypeProperty ;
+    rdfs:label "meter_type" ;
+    rdfs:comment "Meter type such as smart_meter, traditional, prepaid, diaphragm, or rotary." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:energy_type a owl:DatatypeProperty ;
+    rdfs:label "energy_type" ;
+    rdfs:comment "Metered energy type: electricity or gas." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:installation_date a owl:DatatypeProperty ;
+    rdfs:label "installation_date" ;
+    rdfs:comment "Meter installation date." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:date .
+
+meter:last_inspection_date a owl:DatatypeProperty ;
+    rdfs:label "last_inspection_date" ;
+    rdfs:comment "Last inspection or maintenance date." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:date .
+
+meter:location a owl:DatatypeProperty ;
+    rdfs:label "location" ;
+    rdfs:comment "Meter location such as indoor, outdoor, basement, or garage." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+meter:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Meter status: active, inactive, faulty, or replaced." ;
+    rdfs:domain ont:Meter ;
+    rdfs:range xsd:string .
+
+# MeterReading
+meterreading:reading_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "reading_id" ;
+    rdfs:comment "Primary key, e.g. RDG000001." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:string .
+
+meterreading:meter_id a owl:DatatypeProperty ;
+    rdfs:label "meter_id" ;
+    rdfs:comment "Foreign key to Meter.meter_id." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:string .
+
+meterreading:reading_date a owl:DatatypeProperty ;
+    rdfs:label "reading_date" ;
+    rdfs:comment "Date of the meter reading." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:date .
+
+meterreading:reading_value a owl:DatatypeProperty ;
+    rdfs:label "reading_value" ;
+    rdfs:comment "Meter reading value." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:decimal .
+
+meterreading:unit a owl:DatatypeProperty ;
+    rdfs:label "unit" ;
+    rdfs:comment "Measurement unit: kWh or m3." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:string .
+
+meterreading:reading_type a owl:DatatypeProperty ;
+    rdfs:label "reading_type" ;
+    rdfs:comment "Reading type: actual, estimated, or smart_auto." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:string .
+
+meterreading:reported_by a owl:DatatypeProperty ;
+    rdfs:label "reported_by" ;
+    rdfs:comment "Reporter: customer, technician, or smart_meter." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:string .
+
+meterreading:validated a owl:DatatypeProperty ;
+    rdfs:label "validated" ;
+    rdfs:comment "Whether the reading has been validated." ;
+    rdfs:domain ont:MeterReading ;
+    rdfs:range xsd:boolean .
+
+# Invoice
+invoice:invoice_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "invoice_id" ;
+    rdfs:comment "Primary key, e.g. INV000001." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:string .
+
+invoice:contract_id a owl:DatatypeProperty ;
+    rdfs:label "contract_id" ;
+    rdfs:comment "Foreign key to Contract.contract_id." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:string .
+
+invoice:issue_date a owl:DatatypeProperty ;
+    rdfs:label "issue_date" ;
+    rdfs:comment "Invoice issue date." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:date .
+
+invoice:due_date a owl:DatatypeProperty ;
+    rdfs:label "due_date" ;
+    rdfs:comment "Payment due date." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:date .
+
+invoice:period_start a owl:DatatypeProperty ;
+    rdfs:label "period_start" ;
+    rdfs:comment "Billing period start date." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:date .
+
+invoice:period_end a owl:DatatypeProperty ;
+    rdfs:label "period_end" ;
+    rdfs:comment "Billing period end date." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:date .
+
+invoice:amount_ht a owl:DatatypeProperty ;
+    rdfs:label "amount_ht" ;
+    rdfs:comment "Amount before tax (HT)." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:decimal .
+
+invoice:vat_amount a owl:DatatypeProperty ;
+    rdfs:label "vat_amount" ;
+    rdfs:comment "VAT amount." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:decimal .
+
+invoice:amount_ttc a owl:DatatypeProperty ;
+    rdfs:label "amount_ttc" ;
+    rdfs:comment "Total amount including tax (TTC)." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:decimal .
+
+invoice:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Invoice status: paid, pending, overdue, or cancelled." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:string .
+
+invoice:payment_date a owl:DatatypeProperty ;
+    rdfs:label "payment_date" ;
+    rdfs:comment "Actual payment date if paid." ;
+    rdfs:domain ont:Invoice ;
+    rdfs:range xsd:date .
+
+# Payment
+payment:payment_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "payment_id" ;
+    rdfs:comment "Primary key, e.g. PAY000001." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:string .
+
+payment:invoice_id a owl:DatatypeProperty ;
+    rdfs:label "invoice_id" ;
+    rdfs:comment "Foreign key to Invoice.invoice_id." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:string .
+
+payment:payment_date a owl:DatatypeProperty ;
+    rdfs:label "payment_date" ;
+    rdfs:comment "Date of payment." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:date .
+
+payment:amount a owl:DatatypeProperty ;
+    rdfs:label "amount" ;
+    rdfs:comment "Payment amount." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:decimal .
+
+payment:payment_method a owl:DatatypeProperty ;
+    rdfs:label "payment_method" ;
+    rdfs:comment "Payment method." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:string .
+
+payment:transaction_ref a owl:DatatypeProperty ;
+    rdfs:label "transaction_ref" ;
+    rdfs:comment "Bank transaction reference." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:string .
+
+payment:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Payment status: completed, pending, failed, or refunded." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:string .
+
+payment:processed_at a owl:DatatypeProperty ;
+    rdfs:label "processed_at" ;
+    rdfs:comment "Payment processing timestamp." ;
+    rdfs:domain ont:Payment ;
+    rdfs:range xsd:dateTime .
+
+# Call
+call:call_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "call_id" ;
+    rdfs:comment "Primary key, e.g. CALL00001." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+call:customer_id a owl:DatatypeProperty ;
+    rdfs:label "customer_id" ;
+    rdfs:comment "Foreign key to Customer.customer_id." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+call:call_datetime a owl:DatatypeProperty ;
+    rdfs:label "call_datetime" ;
+    rdfs:comment "Call date and time." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:dateTime .
+
+call:duration_seconds a owl:DatatypeProperty ;
+    rdfs:label "duration_seconds" ;
+    rdfs:comment "Call duration in seconds." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:integer .
+
+call:reason a owl:DatatypeProperty ;
+    rdfs:label "reason" ;
+    rdfs:comment "Reason for the service call." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+call:agent_id a owl:DatatypeProperty ;
+    rdfs:label "agent_id" ;
+    rdfs:comment "Customer service agent identifier." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+call:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Call status." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+call:satisfaction_score a owl:DatatypeProperty ;
+    rdfs:label "satisfaction_score" ;
+    rdfs:comment "Customer satisfaction score from 1 to 5." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:integer .
+
+call:notes a owl:DatatypeProperty ;
+    rdfs:label "notes" ;
+    rdfs:comment "Agent notes." ;
+    rdfs:domain ont:Call ;
+    rdfs:range xsd:string .
+
+# Claim
+claim:claim_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "claim_id" ;
+    rdfs:comment "Primary key, e.g. CLM00001." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:customer_id a owl:DatatypeProperty ;
+    rdfs:label "customer_id" ;
+    rdfs:comment "Foreign key to Customer.customer_id." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:contract_id a owl:DatatypeProperty ;
+    rdfs:label "contract_id" ;
+    rdfs:comment "Foreign key to Contract.contract_id." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:claim_type a owl:DatatypeProperty ;
+    rdfs:label "claim_type" ;
+    rdfs:comment "Claim type such as billing_error or service_interruption." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Claim description." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:open_date a owl:DatatypeProperty ;
+    rdfs:label "open_date" ;
+    rdfs:comment "Claim opening date." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:date .
+
+claim:resolution_date a owl:DatatypeProperty ;
+    rdfs:label "resolution_date" ;
+    rdfs:comment "Claim resolution date." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:date .
+
+claim:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Claim status." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:priority a owl:DatatypeProperty ;
+    rdfs:label "priority" ;
+    rdfs:comment "Priority: low, medium, high, or urgent." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:assigned_to a owl:DatatypeProperty ;
+    rdfs:label "assigned_to" ;
+    rdfs:comment "Assigned agent identifier." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:string .
+
+claim:compensation_amount a owl:DatatypeProperty ;
+    rdfs:label "compensation_amount" ;
+    rdfs:comment "Compensation paid, if any." ;
+    rdfs:domain ont:Claim ;
+    rdfs:range xsd:decimal .
+
+# Interaction
+interaction:interaction_id a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "interaction_id" ;
+    rdfs:comment "Primary key, e.g. INT000001." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:customer_id a owl:DatatypeProperty ;
+    rdfs:label "customer_id" ;
+    rdfs:comment "Foreign key to Customer.customer_id." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:channel a owl:DatatypeProperty ;
+    rdfs:label "channel" ;
+    rdfs:comment "Interaction channel such as phone, email, web_portal, or mobile_app." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:interaction_type a owl:DatatypeProperty ;
+    rdfs:label "interaction_type" ;
+    rdfs:comment "Interaction type such as inquiry, request, or update." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:interaction_datetime a owl:DatatypeProperty ;
+    rdfs:label "interaction_datetime" ;
+    rdfs:comment "Interaction timestamp." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:dateTime .
+
+interaction:subject a owl:DatatypeProperty ;
+    rdfs:label "subject" ;
+    rdfs:comment "Interaction subject." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:outcome a owl:DatatypeProperty ;
+    rdfs:label "outcome" ;
+    rdfs:comment "Interaction outcome." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:agent_id a owl:DatatypeProperty ;
+    rdfs:label "agent_id" ;
+    rdfs:comment "Agent identifier, if applicable." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .
+
+interaction:duration_minutes a owl:DatatypeProperty ;
+    rdfs:label "duration_minutes" ;
+    rdfs:comment "Interaction duration in minutes." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:integer .
+
+interaction:sentiment a owl:DatatypeProperty ;
+    rdfs:label "sentiment" ;
+    rdfs:comment "Sentiment: positive, neutral, or negative." ;
+    rdfs:domain ont:Interaction ;
+    rdfs:range xsd:string .

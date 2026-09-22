@@ -1,0 +1,13 @@
+@prefix actiondemo: <https://databricks-ontology.com/ActionDemo#> .
+@prefix ontobricks: <http://ontobricks.com/schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://databricks-ontology.com/ActionDemo> a owl:Ontology ;
+    rdfs:label "actiondemo" .
+
+actiondemo:Customer a owl:Class ;
+    rdfs:label "Customer" ;
+    ontobricks:actions "[{\"schema\": \"action_demo\", \"catalog\": \"ontobricks\", \"fullName\": \"ontobricks.action_demo.confirm_customer_action\", \"function\": \"confirm_customer_action\", \"description\": \"Confirm that the action was invoked for this customer\", \"returns_table\": false}, {\"schema\": \"action_demo\", \"catalog\": \"ontobricks\", \"fullName\": \"ontobricks.action_demo.get_customer_detail_action\", \"function\": \"get_customer_detail_action\", \"description\": \"Get customer details\", \"returns_table\": true}, {\"schema\": \"action_demo\", \"catalog\": \"ontobricks\", \"fullName\": \"ontobricks.action_demo.get_customer_name_action\", \"function\": \"get_customer_name_action\", \"description\": \"Get the customer name\", \"returns_table\": false}]" ;
+    ontobricks:icon "📦" .
+

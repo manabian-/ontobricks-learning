@@ -1,0 +1,15 @@
+@prefix ont: <https://databricks-ontology.com/ActionDemo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+
+ont:TriplesMap_Customer a rr:TriplesMap ;
+    rdfs:comment "Mapping for Customer to https://databricks-ontology.com/ActionDemo#Customer" ;
+    rr:logicalTable [ rr:sqlQuery """SELECT
+    customer_id,
+    customer_name
+FROM ontobricks.action_demo.customer""" ] ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:column "customer_name" ] ;
+            rr:predicate rdfs:label ] ;
+    rr:subjectMap [ rr:class <https://databricks-ontology.com/ActionDemo#Customer> ;
+            rr:template "https://databricks-ontology.com/ActionDemo/Customer/{customer_id}" ] .
+
