@@ -6,7 +6,7 @@ OntoBricks 入門シリーズのシンプルな Action の実装編です。シ�
 
 詳細な手順は下記の記事にて紹介しています。
 
-- ToDo
+- [Databricks 上でオントロジーとナレッジグラフを構築・活用するための OntoBricks 入門シリーズ 4. シンプルな Action の実装編 #rdf - Qiita](https://qiita.com/manabian/private/105feecf80e3429084e8)
 
 ## Assets
 

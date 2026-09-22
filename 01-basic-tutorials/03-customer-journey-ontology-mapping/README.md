@@ -6,7 +6,7 @@ OntoBricks 入門シリーズの複雑なケースの実装編です。OntoBrick
 
 詳細な手順は下記の記事にて紹介しています。
 
-- ToDo
+- [Databricks 上でオントロジーとナレッジグラフを構築・活用するための OntoBricks 入門シリーズ 3. 複雑なケースの実装編 #rdf - Qiita](https://qiita.com/manabian/items/91e7240a84681412f743)
 
 ## Assets
 
