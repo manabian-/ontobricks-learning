@@ -1,0 +1,24 @@
+@prefix ont: <https://databricks-ontology.com/ActionDemo2/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ont:TriplesMap_Customer a rr:TriplesMap ;
+    rdfs:comment "Mapping for Customer to https://databricks-ontology.com/ActionDemo2#Customer" ;
+    rr:logicalTable [ rr:sqlQuery """SELECT 
+    customer_id,
+    customer_name,
+    status,
+    updated_at
+FROM ontobricks.action_demo_02.customer""" ] ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:column "customer_name" ] ;
+            rr:predicate rdfs:label ],
+        [ rr:objectMap [ rr:column "status" ;
+                    rr:datatype xsd:string ] ;
+            rr:predicate ont:status ],
+        [ rr:objectMap [ rr:column "updated_at" ;
+                    rr:datatype xsd:string ] ;
+            rr:predicate ont:updated_at ] ;
+    rr:subjectMap [ rr:class <https://databricks-ontology.com/ActionDemo2#Customer> ;
+            rr:template "https://databricks-ontology.com/ActionDemo2/Customer/{customer_id}" ] .
+

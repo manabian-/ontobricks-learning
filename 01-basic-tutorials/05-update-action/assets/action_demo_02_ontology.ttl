@@ -1,0 +1,28 @@
+# WARNINGS:
+#   1. No relationships defined
+#
+# ─────────────────────────────────────────────────────────────
+
+@prefix actiondemo2: <https://databricks-ontology.com/ActionDemo2#> .
+@prefix ontobricks: <http://ontobricks.com/schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://databricks-ontology.com/ActionDemo2> a owl:Ontology ;
+    rdfs:label "actiondemo2" .
+
+actiondemo2:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:domain actiondemo2:Customer ;
+    rdfs:range xsd:string .
+
+actiondemo2:updated_at a owl:DatatypeProperty ;
+    rdfs:label "updated_at" ;
+    rdfs:domain actiondemo2:Customer ;
+    rdfs:range xsd:string .
+
+actiondemo2:Customer a owl:Class ;
+    rdfs:label "Customer" ;
+    ontobricks:actions "[{\"catalog\": \"ontobricks\", \"schema\": \"action_demo_02\", \"function\": \"deactivate_customer_action\", \"fullName\": \"ontobricks.action_demo_02.deactivate_customer_action\", \"description\": \"\\u6307\\u5b9a\\u3055\\u308c\\u305f\\u9867\\u5ba2\\u3092\\u975e\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\\u5316\\u3059\\u308b OntoBricks Action\", \"returns_table\": false}]" ;
+    ontobricks:icon "📦" .
